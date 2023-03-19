@@ -291,6 +291,7 @@ chrome.registerPlugin(new CookiePlugin());
 
 ## Extension namespaces
 
+* [chrome.action](https://developer.chrome.com/extensions/action)
 * [chrome.alarms](https://developer.chrome.com/extensions/alarms)
 * [chrome.bookmarks](https://developer.chrome.com/extensions/bookmarks)
 * [chrome.browserAction](https://developer.chrome.com/extensions/browserAction)
@@ -325,6 +326,7 @@ chrome.registerPlugin(new CookiePlugin());
 * [chrome.privacy](https://developer.chrome.com/extensions/privacy)
 * [chrome.proxy](https://developer.chrome.com/extensions/proxy)
 * [chrome.runtime](https://developer.chrome.com/extensions/runtime)
+* [chrome.scripting](https://developer.chrome.com/extensions/scripting)
 * [chrome.sessions](https://developer.chrome.com/extensions/sessions)
 * [chrome.storage](https://developer.chrome.com/extensions/storage)
 * [chrome.system](https://developer.chrome.com/extensions/system)

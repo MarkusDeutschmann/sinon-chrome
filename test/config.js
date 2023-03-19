@@ -4,6 +4,30 @@
  */
 
 export default {
+    action: {
+        methods: [
+            'disable',
+            'enable',
+            'getBadgeBackgroundColor',
+            'getBadgeText',
+            'getBadgeTextColor',
+            'getPopup',
+            'getTitle',
+            'getUserSettings',
+            'isEnabled',
+            'openPopup',
+            'setBadgeBackgroundColor',
+            'setBadgeText',
+            'setBadgeTextColor',
+            'setIcon',
+            'setPopup',
+            'setTitle'
+        ],
+        properties: [],
+        events: [
+            'onClicked'
+        ]
+    },
     alarms: {
         methods: [
             'create',
@@ -781,6 +805,17 @@ export default {
             'onMessage',
             'onMessageExternal',
             'onRestartRequired'
+        ]
+    },
+    scripting: {
+        methods: [
+            'executeScript',
+            'getRegisteredContentScripts',
+            'insertCSS',
+            'registerContentScripts',
+            'removeCSS',
+            'unregisterContentScripts',
+            'updateContentScripts'
         ]
     },
     sessions: {
