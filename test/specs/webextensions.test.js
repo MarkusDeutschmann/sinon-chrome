@@ -30,9 +30,10 @@ function checkChromeObject() {
 
 /**
  * Check namespace
- * @param {Array<String>} methods
- * @param {Array<String>} properties
- * @param {Array<String>} events
+ * @param {Object} data
+ * @param {string} data.methods
+ * @param {string} data.properties
+ * @param {string} data.events
  * @param {String} namespace
  * @param {String} prefix
  */

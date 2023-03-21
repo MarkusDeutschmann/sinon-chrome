@@ -29,6 +29,7 @@ export default class Api {
 
     /**
      * @param {Array<Object>} config
+     * @param {Object} options
      */
     constructor(config, options = {}) {
         this.sinon = options.sinon ? options.sinon : sinon;
