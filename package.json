@@ -42,8 +42,9 @@
     "chrome api",
     "sinon"
   ],
-  "main": "index.js",
+  "main": "out/index.js",
   "scripts": {
+    "prepare": "npm run build",
     "clean": "rm -rf ./out/",
     "lint": "eslint ./src ./test",
     "test": "mocha --recursive --compilers js:babel-register --require ./test/setup.js",
