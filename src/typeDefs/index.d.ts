@@ -19,7 +19,7 @@
  */
 
 import * as Sinon from 'sinon';
-export default SinonChrome;
+export default { default: SinonChrome };
 export as namespace SinonChrome;
 
 interface SinonChromeStub extends Sinon.SinonStub {
