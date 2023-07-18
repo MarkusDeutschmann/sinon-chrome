@@ -1,233 +1,183 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @author https://github.com/acvetkov
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @overview ChromeCookies
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
-var _find = require('lodash/find');
-
-var _find2 = _interopRequireDefault(_find);
-
-var _filter = require('lodash/filter');
-
-var _filter2 = _interopRequireDefault(_filter);
-
-var _findIndex = require('lodash/findIndex');
-
-var _findIndex2 = _interopRequireDefault(_findIndex);
-
-var _isFunction = require('lodash/isFunction');
-
-var _isFunction2 = _interopRequireDefault(_isFunction);
-
-var _urijs = require('urijs');
-
-var _urijs2 = _interopRequireDefault(_urijs);
-
-var _cookie = require('./cookie');
-
-var _cookie2 = _interopRequireDefault(_cookie);
-
-var _events = require('../../events');
-
-var _events2 = _interopRequireDefault(_events);
-
-var _assert = require('./assert');
-
-var assert = _interopRequireWildcard(_assert);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
+exports.default = void 0;
+var _find = _interopRequireDefault(require("lodash/find"));
+var _filter = _interopRequireDefault(require("lodash/filter"));
+var _findIndex = _interopRequireDefault(require("lodash/findIndex"));
+var _isFunction = _interopRequireDefault(require("lodash/isFunction"));
+var _urijs = _interopRequireDefault(require("urijs"));
+var _cookie = _interopRequireDefault(require("./cookie"));
+var _events = _interopRequireDefault(require("../../events"));
+var assert = _interopRequireWildcard(require("./assert"));
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+/**
+ * @author https://github.com/acvetkov
+ * @overview ChromeCookies
+ */
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+class ChromeCookies {
+  constructor() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    this._state = state;
+    this.onChanged = new _events.default();
+  }
 
-var ChromeCookies = function () {
-    function ChromeCookies() {
-        var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  /**
+   * Install plugin
+   * @param {Object} chrome
+   */
+  install(chrome) {
+    var plugin = this;
+    this.chrome = chrome;
+    Object.defineProperty(this.chrome, 'cookies', {
+      get: function get() {
+        return plugin;
+      }
+    });
+  }
 
-        _classCallCheck(this, ChromeCookies);
+  /**
+   * get cookie by criteria
+   * @param {Object} details
+   * @param {String} details.url
+   * @param {String} details.name
+   * @param {Function} callback
+   * @returns {*}
+   */
+  get(details, callback) {
+    assert.get.apply(null, arguments);
+    var params = {
+      name: details.name,
+      domain: new _urijs.default(details.url).hostname()
+    };
+    return this._invokeResult((0, _find.default)(this._state, params) || null, callback);
+  }
 
-        this._state = state;
-        this.onChanged = new _events2.default();
+  /**
+   * get all cookie list by criteria
+   * @param {AllCookieCriteria} details
+   * @param {Function} callback
+   * @returns {*}
+   */
+  getAll(details, callback) {
+    assert.getAll.apply(this, arguments);
+    var params = details;
+    if (params.url) {
+      params.domain = new _urijs.default(details.url).hostname();
+      delete params.url;
     }
+    return this._invokeResult((0, _filter.default)(this._state, params), callback);
+  }
 
-    /**
-     * Install plugin
-     * @param {Object} chrome
-     */
+  /**
+   * set cookie value
+   * @param {ChromeCookie} details
+   * @param {Function} callback
+   */
+  set(details, callback) {
+    assert.set.apply(null, arguments);
+    var cookie = new _cookie.default(details);
+    var cookieInfo = cookie.info;
+    this._appendCookie(cookieInfo);
+    this._invokeResult(cookieInfo, callback);
+  }
 
+  /**
+   * remove cookie
+   * @param {Object} details
+   * @param {String} details.url
+   * @param {String} details.name
+   * @param {Function} [callback]
+   */
+  remove(details, callback) {
+    assert.remove.apply(null, arguments);
+    var params = {
+      name: details.name,
+      domain: new _urijs.default(details.url).hostname()
+    };
+    var cookieInfo = (0, _find.default)(this._state, params);
+    if (cookieInfo) {
+      var index = (0, _find.default)(this._state, cookieInfo);
+      this._state.splice(index, 1);
+      this._triggerChange({
+        cause: 'explicit',
+        removed: true,
+        cookie: cookieInfo
+      });
+    }
+    this._invokeResult(details, callback);
+  }
 
-    _createClass(ChromeCookies, [{
-        key: 'install',
-        value: function install(chrome) {
-            var plugin = this;
-            this.chrome = chrome;
-            Object.defineProperty(this.chrome, 'cookies', {
-                get: function get() {
-                    return plugin;
-                }
-            });
-        }
+  /**
+   * Append new cookie
+   * @param {Object} cookieInfo
+   * @private
+   */
+  _appendCookie(cookieInfo) {
+    var index = (0, _findIndex.default)(this._state, {
+      name: cookieInfo.name,
+      domain: cookieInfo.domain
+    });
+    if (index >= 0) {
+      this._state.splice(index, 1, cookieInfo);
+      this._triggerChange({
+        cause: 'overwrite',
+        removed: true,
+        cookie: cookieInfo
+      });
+      this._triggerChange({
+        cause: 'explicit',
+        removed: false,
+        cookie: cookieInfo
+      });
+    } else {
+      this._state.push(cookieInfo);
+      this._triggerChange({
+        cause: 'explicit',
+        removed: false,
+        cookie: cookieInfo
+      });
+    }
+  }
 
-        /**
-         * get cookie by criteria
-         * @param {Object} details
-         * @param {String} details.url
-         * @param {String} details.name
-         * @param {Function} callback
-         * @returns {*}
-         */
+  /**
+   * Trigger change event
+   * @param {Object} changeInfo
+   * @private
+   */
+  _triggerChange(changeInfo) {
+    this.onChanged.triggerAsync(changeInfo);
+  }
 
-    }, {
-        key: 'get',
-        value: function get(details, callback) {
-            assert.get.apply(null, arguments);
-            var params = {
-                name: details.name,
-                domain: new _urijs2.default(details.url).hostname()
-            };
-            return this._invokeResult((0, _find2.default)(this._state, params) || null, callback);
-        }
+  /**
+   * Async invoke result
+   * @param {*} result
+   * @param {Function} callback
+   * @private
+   */
+  _invokeResult(result, callback) {
+    if ((0, _isFunction.default)(callback)) {
+      setTimeout(() => callback(result), 0);
+    }
+  }
 
-        /**
-         * get all cookie list by criteria
-         * @param {AllCookieCriteria} details
-         * @param {Function} callback
-         * @returns {*}
-         */
+  /**
+   * @returns {Object}
+   */
+  get state() {
+    return this._state;
+  }
 
-    }, {
-        key: 'getAll',
-        value: function getAll(details, callback) {
-            assert.getAll.apply(this, arguments);
-            var params = details;
-            if (params.url) {
-                params.domain = new _urijs2.default(details.url).hostname();
-                delete params.url;
-            }
-            return this._invokeResult((0, _filter2.default)(this._state, params), callback);
-        }
-
-        /**
-         * set cookie value
-         * @param {ChromeCookie} details
-         * @param {Function} callback
-         */
-
-    }, {
-        key: 'set',
-        value: function set(details, callback) {
-            assert.set.apply(null, arguments);
-            var cookie = new _cookie2.default(details);
-            var cookieInfo = cookie.info;
-            this._appendCookie(cookieInfo);
-            this._invokeResult(cookieInfo, callback);
-        }
-
-        /**
-         * remove cookie
-         * @param {Object} details
-         * @param {String} details.url
-         * @param {String} details.name
-         * @param {Function} [callback]
-         */
-
-    }, {
-        key: 'remove',
-        value: function remove(details, callback) {
-            assert.remove.apply(null, arguments);
-            var params = {
-                name: details.name,
-                domain: new _urijs2.default(details.url).hostname()
-            };
-            var cookieInfo = (0, _find2.default)(this._state, params);
-            if (cookieInfo) {
-                var index = (0, _find2.default)(this._state, cookieInfo);
-                this._state.splice(index, 1);
-                this._triggerChange({ cause: 'explicit', removed: true, cookie: cookieInfo });
-            }
-            this._invokeResult(details, callback);
-        }
-
-        /**
-         * Append new cookie
-         * @param {Object} cookieInfo
-         * @private
-         */
-
-    }, {
-        key: '_appendCookie',
-        value: function _appendCookie(cookieInfo) {
-            var index = (0, _findIndex2.default)(this._state, {
-                name: cookieInfo.name,
-                domain: cookieInfo.domain
-            });
-            if (index >= 0) {
-                this._state.splice(index, 1, cookieInfo);
-                this._triggerChange({ cause: 'overwrite', removed: true, cookie: cookieInfo });
-                this._triggerChange({ cause: 'explicit', removed: false, cookie: cookieInfo });
-            } else {
-                this._state.push(cookieInfo);
-                this._triggerChange({ cause: 'explicit', removed: false, cookie: cookieInfo });
-            }
-        }
-
-        /**
-         * Trigger change event
-         * @param {Object} changeInfo
-         * @private
-         */
-
-    }, {
-        key: '_triggerChange',
-        value: function _triggerChange(changeInfo) {
-            this.onChanged.triggerAsync(changeInfo);
-        }
-
-        /**
-         * Async invoke result
-         * @param {*} result
-         * @param {Function} callback
-         * @private
-         */
-
-    }, {
-        key: '_invokeResult',
-        value: function _invokeResult(result, callback) {
-            if ((0, _isFunction2.default)(callback)) {
-                setTimeout(function () {
-                    return callback(result);
-                }, 0);
-            }
-        }
-
-        /**
-         * @returns {Object}
-         */
-
-    }, {
-        key: 'state',
-        get: function get() {
-            return this._state;
-        }
-
-        /**
-         * @param {Object} value
-         */
-        ,
-        set: function set(value) {
-            this._state = value;
-        }
-    }]);
-
-    return ChromeCookies;
-}();
-
+  /**
+   * @param {Object} value
+   */
+  set state(value) {
+    this._state = value;
+  }
+}
 exports.default = ChromeCookies;
-module.exports = exports['default'];

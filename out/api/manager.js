@@ -1,42 +1,34 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+exports.default = void 0;
 /**
  * @author https://github.com/acvetkovk
  * @overview Manager
  */
 
-var Manager =
-
-/**
- * @param {StubsCache} stub
- * @param {EventsCache} events
- * @param {PropsCache} props
- */
-function Manager(stub, events, props) {
-    var _this = this;
-
-    _classCallCheck(this, Manager);
-
+class Manager {
+  /**
+   * @param {StubsCache} stub
+   * @param {EventsCache} events
+   * @param {PropsCache} props
+   */
+  constructor(stub, events, props) {
     this.__stub__ = stub;
     this.__events__ = events;
     this.__props__ = props;
-    this.reset = function () {
-        _this.__stub__.reset();
-        _this.__events__.reset();
-        _this.__props__.reset();
+    this.reset = () => {
+      this.__stub__.reset();
+      this.__events__.reset();
+      this.__props__.reset();
     };
-    this.flush = function () {
-        _this.__stub__.flush();
-        _this.__events__.flush();
-        _this.__props__.flush();
+    this.flush = () => {
+      this.__stub__.flush();
+      this.__events__.flush();
+      this.__props__.flush();
     };
-};
-
+  }
+}
 exports.default = Manager;
-module.exports = exports["default"];
