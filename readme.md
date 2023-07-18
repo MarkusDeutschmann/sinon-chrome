@@ -1,25 +1,25 @@
+# Sinon-chrome
+
 [![Build Status](https://travis-ci.org/acvetkov/sinon-chrome.svg?branch=master)](https://travis-ci.org/acvetkov/sinon-chrome)
 [![npm version](https://badge.fury.io/js/sinon-chrome.svg)](https://www.npmjs.com/package/sinon-chrome)
 
-# Sinon-chrome
-
 Sinon-chrome is helper tool for unit-testing chromium and Firefox extensions and apps. It mocks all extensions api with sinon stubs that allows you to run tests in Node.js without actual browser.
 
-# Schema support
+## Schema support
+
 API mocks are generated using official chromium extensions API (Firefox webextensions) schemas that ensures consistency with real API. Actual schemas are taken from Chrome 53 and Firefox 49.
 
-# How it works
+## How it works
 
 Sinon-chrome mocks all chrome api, replaced methods by [sinon stubs](http://sinonjs.org/docs/#stubs) with some sugar.
 Chrome events replaced by classes with same behavior, so you can test your event handlers with manual triggering chrome events.
 All properties has values from chrome schema files.
 
-
-# Install
+## Install
 
 We recommend use `sinon-chrome` on Node.js platform.
 
-```
+```bash
 npm install sinon-chrome --save-dev
 ```
 
@@ -37,7 +37,7 @@ or
 <script src="/path/to/sinon-chrome-apps.min.js">
 ```
 
-# Usage
+## Usage
 
 For mock extensions Api
 
@@ -55,7 +55,7 @@ For mock apps Api
 const chrome = require('sinon-chrome/apps'); // stable apps api
 ```
 
-# Examples
+## Examples
 
 Let's write small navigation helper, which use chrome api methods.
 
@@ -113,19 +113,18 @@ describe('navigate.js', function () {
 
 You can run this example by command
 
-```
+```bash
 npm run test-navigate
 ```
 
 More tests in `examples` dir.
 
-
-## stubs api
+### stubs api
 
 With original sinon stubs [api](http://sinonjs.org/docs/#stubs) we add `flush` method, which reset stub behavior.
 Sinon stub has same method `resetBehavior`, but it has some issues.
 
-**Example**
+#### Example
 
 ```js
 chrome.cookie.getAll.withArgs({name: 'my_cookie'}).yields([1, 2]);
@@ -138,7 +137,7 @@ chrome.cookie.getAll({name: 'my_cookie'}, list => console.log(list)); // not cal
 chrome.cookie.getAll({}, list => console.log(list)); // not called
 ```
 
-### events
+#### events
 
 Let's write module, which depends on chrome events
 
@@ -196,11 +195,11 @@ describe('events.js', function () {
 
 You can run this test via
 
-```
+```bash
 npm run test-events
 ```
 
-### properties
+#### properties
 
 You can set property values. `chrome.flush` reset properties to default values (`null` or specified by schema).
 Let's create module, which wraps chrome api with Promise. If `chrome.runtime.lastError` is set, promise will be rejected.
@@ -270,11 +269,11 @@ describe('then-chrome.js', function () {
 
 You can run this test via
 
-```
+```bash
 npm run test-then
 ```
 
-# Plugins
+## Plugins
 
 Sinon chrome module supports plugins, that emulates browser behavior.
 More info on [example page](https://github.com/acvetkov/sinon-chrome/wiki/Cookie-plugin).
@@ -289,129 +288,130 @@ const CookiePlugin = require('sinon-chrome/plugins').CookiePlugin;
 chrome.registerPlugin(new CookiePlugin());
 ```
 
-## Extension namespaces
+### Extension namespaces
 
-* [chrome.alarms](https://developer.chrome.com/extensions/alarms)
-* [chrome.bookmarks](https://developer.chrome.com/extensions/bookmarks)
-* [chrome.browserAction](https://developer.chrome.com/extensions/browserAction)
-* [chrome.browsingData](https://developer.chrome.com/extensions/browsingData)
-* [chrome.commands](https://developer.chrome.com/extensions/commands)
-* [chrome.contentSettings](https://developer.chrome.com/extensions/contentSettings)
-* [chrome.contextMenus](https://developer.chrome.com/extensions/contextMenus)
-* [chrome.cookies](https://developer.chrome.com/extensions/cookies)
-* [chrome.debugger](https://developer.chrome.com/extensions/debugger)
-* [chrome.declarativeContent](https://developer.chrome.com/extensions/declarativeContent)
-* [chrome.desktopCapture](https://developer.chrome.com/extensions/desktopCapture)
-* [chrome.devtools](https://developer.chrome.com/extensions/devtools)
-* [chrome.dial](https://chromium.googlesource.com/chromium/src.git/+/master/chrome/common/extensions/api/dial.idl) (undocumented API for communication with DIAL-capable devices)
-* [chrome.downloads](https://developer.chrome.com/extensions/downloads)
-* [chrome.extension](https://developer.chrome.com/extensions/extension)
-* [chrome.extensionTypes](https://developer.chrome.com/extensions/extensionTypes)
-* [chrome.fontSettings](https://developer.chrome.com/extensions/fontSettings)
-* [chrome.gcm](https://developer.chrome.com/extensions/gcm)
-* [chrome.history](https://developer.chrome.com/extensions/history)
-* [chrome.i18n](https://developer.chrome.com/extensions/i18n)
-* [chrome.identity](https://developer.chrome.com/extensions/identity)
-* [chrome.idle](https://developer.chrome.com/extensions/idle)
-* [chrome.instanceID](https://developer.chrome.com/extensions/instanceID)
-* [chrome.management](https://developer.chrome.com/extensions/management)
-* [chrome.notifications](https://developer.chrome.com/extensions/notifications)
-* [chrome.omnibox](https://developer.chrome.com/extensions/omnibox)
-* [chrome.pageAction](https://developer.chrome.com/extensions/pageAction)
-* [chrome.pageCapture](https://developer.chrome.com/extensions/pageCapture)
-* [chrome.permissions](https://developer.chrome.com/extensions/permissions)
-* [chrome.power](https://developer.chrome.com/extensions/power)
-* [chrome.printerProvider](https://developer.chrome.com/extensions/printerProvider)
-* [chrome.privacy](https://developer.chrome.com/extensions/privacy)
-* [chrome.proxy](https://developer.chrome.com/extensions/proxy)
-* [chrome.runtime](https://developer.chrome.com/extensions/runtime)
-* [chrome.sessions](https://developer.chrome.com/extensions/sessions)
-* [chrome.storage](https://developer.chrome.com/extensions/storage)
-* [chrome.system](https://developer.chrome.com/extensions/system)
-* [chrome.tabCapture](https://developer.chrome.com/extensions/tabCapture)
-* [chrome.tabs](https://developer.chrome.com/extensions/tabs)
-* [chrome.topSites](https://developer.chrome.com/extensions/topSites)
-* [chrome.tts](https://developer.chrome.com/extensions/tts)
-* [chrome.ttsEngine](https://developer.chrome.com/extensions/ttsEngine)
-* [chrome.types](https://developer.chrome.com/extensions/types)
-* [chrome.webNavigation](https://developer.chrome.com/extensions/webNavigation)
-* [chrome.webRequest](https://developer.chrome.com/extensions/webRequest)
-* [chrome.webstore](https://developer.chrome.com/extensions/webstore)
-* [chrome.windows](https://developer.chrome.com/extensions/windows)
+- [chrome.alarms](https://developer.chrome.com/extensions/alarms)
+- [chrome.bookmarks](https://developer.chrome.com/extensions/bookmarks)
+- [chrome.browserAction](https://developer.chrome.com/extensions/browserAction)
+- [chrome.browsingData](https://developer.chrome.com/extensions/browsingData)
+- [chrome.commands](https://developer.chrome.com/extensions/commands)
+- [chrome.contentSettings](https://developer.chrome.com/extensions/contentSettings)
+- [chrome.contextMenus](https://developer.chrome.com/extensions/contextMenus)
+- [chrome.cookies](https://developer.chrome.com/extensions/cookies)
+- [chrome.debugger](https://developer.chrome.com/extensions/debugger)
+- [chrome.declarativeContent](https://developer.chrome.com/extensions/declarativeContent)
+- [chrome.desktopCapture](https://developer.chrome.com/extensions/desktopCapture)
+- [chrome.devtools](https://developer.chrome.com/extensions/devtools)
+- [chrome.dial](https://chromium.googlesource.com/chromium/src.git/+/master/chrome/common/extensions/api/dial.idl) (undocumented API for communication with DIAL-capable devices)
+- [chrome.downloads](https://developer.chrome.com/extensions/downloads)
+- [chrome.extension](https://developer.chrome.com/extensions/extension)
+- [chrome.extensionTypes](https://developer.chrome.com/extensions/extensionTypes)
+- [chrome.fontSettings](https://developer.chrome.com/extensions/fontSettings)
+- [chrome.gcm](https://developer.chrome.com/extensions/gcm)
+- [chrome.history](https://developer.chrome.com/extensions/history)
+- [chrome.i18n](https://developer.chrome.com/extensions/i18n)
+- [chrome.identity](https://developer.chrome.com/extensions/identity)
+- [chrome.idle](https://developer.chrome.com/extensions/idle)
+- [chrome.instanceID](https://developer.chrome.com/extensions/instanceID)
+- [chrome.management](https://developer.chrome.com/extensions/management)
+- [chrome.notifications](https://developer.chrome.com/extensions/notifications)
+- [chrome.omnibox](https://developer.chrome.com/extensions/omnibox)
+- [chrome.pageAction](https://developer.chrome.com/extensions/pageAction)
+- [chrome.pageCapture](https://developer.chrome.com/extensions/pageCapture)
+- [chrome.permissions](https://developer.chrome.com/extensions/permissions)
+- [chrome.power](https://developer.chrome.com/extensions/power)
+- [chrome.printerProvider](https://developer.chrome.com/extensions/printerProvider)
+- [chrome.privacy](https://developer.chrome.com/extensions/privacy)
+- [chrome.proxy](https://developer.chrome.com/extensions/proxy)
+- [chrome.runtime](https://developer.chrome.com/extensions/runtime)
+- [chrome.sessions](https://developer.chrome.com/extensions/sessions)
+- [chrome.storage](https://developer.chrome.com/extensions/storage)
+- [chrome.system](https://developer.chrome.com/extensions/system)
+- [chrome.tabCapture](https://developer.chrome.com/extensions/tabCapture)
+- [chrome.tabs](https://developer.chrome.com/extensions/tabs)
+- [chrome.topSites](https://developer.chrome.com/extensions/topSites)
+- [chrome.tts](https://developer.chrome.com/extensions/tts)
+- [chrome.ttsEngine](https://developer.chrome.com/extensions/ttsEngine)
+- [chrome.types](https://developer.chrome.com/extensions/types)
+- [chrome.webNavigation](https://developer.chrome.com/extensions/webNavigation)
+- [chrome.webRequest](https://developer.chrome.com/extensions/webRequest)
+- [chrome.webstore](https://developer.chrome.com/extensions/webstore)
+- [chrome.windows](https://developer.chrome.com/extensions/windows)
 
-## Apps namespaces
+### Apps namespaces
 
-* [chrome.alarms](https://developer.chrome.com/apps/alarms)
-* [chrome.app.runtime](https://developer.chrome.com/apps/app.runtime)
-* [chrome.app.window](https://developer.chrome.com/apps/app_window)
-* [chrome.bluetooth](https://developer.chrome.com/apps/bluetooth)
-* [chrome.bluetoothSocket](https://developer.chrome.com/apps/bluetoothSocket)
-* [chrome.browser](https://developer.chrome.com/apps/browser)
-* [chrome.commands](https://developer.chrome.com/apps/commands)
-* [chrome.contextMenus](https://developer.chrome.com/apps/contextMenus)
-* [chrome.events](https://developer.chrome.com/apps/events)
-* [chrome.extensionTypes](https://developer.chrome.com/apps/extensionTypes)
-* [chrome.fileSystem](https://developer.chrome.com/apps/fileSystem)
-* [chrome.gcm](https://developer.chrome.com/apps/gcm)
-* [chrome.hid](https://developer.chrome.com/apps/hid)
-* [chrome.i18n](https://developer.chrome.com/apps/i18n)
-* [chrome.identity](https://developer.chrome.com/apps/identity)
-* [chrome.idle](https://developer.chrome.com/apps/idle)
-* [chrome.instanceID](https://developer.chrome.com/apps/instanceID)
-* [chrome.mdns](https://developer.chrome.com/apps/mdns)
-* [chrome.mediaGalleries](https://developer.chrome.com/apps/mediaGalleries)
-* [chrome.notifications](https://developer.chrome.com/apps/notifications)
-* [chrome.permissions](https://developer.chrome.com/apps/permissions)
-* [chrome.power](https://developer.chrome.com/apps/power)
-* [chrome.printerProvider](https://developer.chrome.com/apps/printerProvider)
-* [chrome.runtime](https://developer.chrome.com/apps/runtime)
-* [chrome.serial](https://developer.chrome.com/apps/serial)
-* [chrome.socket](https://developer.chrome.com/apps/socket)
-* [chrome.sockets](https://developer.chrome.com/apps/sockets)
-* [chrome.storage](https://developer.chrome.com/apps/storage)
-* [chrome.syncFileSystem](https://developer.chrome.com/apps/syncFileSystem)
-* [chrome.system](https://developer.chrome.com/apps/system)
-* [chrome.tts](https://developer.chrome.com/apps/tts)
-* [chrome.types](https://developer.chrome.com/apps/types)
-* [chrome.usb](https://developer.chrome.com/apps/usb)
-* [chrome.accessibilityFeatures](https://developer.chrome.com/apps/accessibilityFeatures)
-* [chrome.bluetoothLowEnergy](https://developer.chrome.com/apps/bluetoothLowEnergy)
-* [chrome.documentScan](https://developer.chrome.com/apps/documentScan)
-* [chrome.fileSystemProvider](https://developer.chrome.com/apps/fileSystemProvider)
-* [chrome.vpnProvider](https://developer.chrome.com/apps/vpnProvider)
-* [chrome.wallpaper](https://developer.chrome.com/apps/wallpaper)
+- [chrome.alarms](https://developer.chrome.com/apps/alarms)
+- [chrome.app.runtime](https://developer.chrome.com/apps/app.runtime)
+- [chrome.app.window](https://developer.chrome.com/apps/app_window)
+- [chrome.bluetooth](https://developer.chrome.com/apps/bluetooth)
+- [chrome.bluetoothSocket](https://developer.chrome.com/apps/bluetoothSocket)
+- [chrome.browser](https://developer.chrome.com/apps/browser)
+- [chrome.commands](https://developer.chrome.com/apps/commands)
+- [chrome.contextMenus](https://developer.chrome.com/apps/contextMenus)
+- [chrome.events](https://developer.chrome.com/apps/events)
+- [chrome.extensionTypes](https://developer.chrome.com/apps/extensionTypes)
+- [chrome.fileSystem](https://developer.chrome.com/apps/fileSystem)
+- [chrome.gcm](https://developer.chrome.com/apps/gcm)
+- [chrome.hid](https://developer.chrome.com/apps/hid)
+- [chrome.i18n](https://developer.chrome.com/apps/i18n)
+- [chrome.identity](https://developer.chrome.com/apps/identity)
+- [chrome.idle](https://developer.chrome.com/apps/idle)
+- [chrome.instanceID](https://developer.chrome.com/apps/instanceID)
+- [chrome.mdns](https://developer.chrome.com/apps/mdns)
+- [chrome.mediaGalleries](https://developer.chrome.com/apps/mediaGalleries)
+- [chrome.notifications](https://developer.chrome.com/apps/notifications)
+- [chrome.permissions](https://developer.chrome.com/apps/permissions)
+- [chrome.power](https://developer.chrome.com/apps/power)
+- [chrome.printerProvider](https://developer.chrome.com/apps/printerProvider)
+- [chrome.runtime](https://developer.chrome.com/apps/runtime)
+- [chrome.serial](https://developer.chrome.com/apps/serial)
+- [chrome.socket](https://developer.chrome.com/apps/socket)
+- [chrome.sockets](https://developer.chrome.com/apps/sockets)
+- [chrome.storage](https://developer.chrome.com/apps/storage)
+- [chrome.syncFileSystem](https://developer.chrome.com/apps/syncFileSystem)
+- [chrome.system](https://developer.chrome.com/apps/system)
+- [chrome.tts](https://developer.chrome.com/apps/tts)
+- [chrome.types](https://developer.chrome.com/apps/types)
+- [chrome.usb](https://developer.chrome.com/apps/usb)
+- [chrome.accessibilityFeatures](https://developer.chrome.com/apps/accessibilityFeatures)
+- [chrome.bluetoothLowEnergy](https://developer.chrome.com/apps/bluetoothLowEnergy)
+- [chrome.documentScan](https://developer.chrome.com/apps/documentScan)
+- [chrome.fileSystemProvider](https://developer.chrome.com/apps/fileSystemProvider)
+- [chrome.vpnProvider](https://developer.chrome.com/apps/vpnProvider)
+- [chrome.wallpaper](https://developer.chrome.com/apps/wallpaper)
 
-## Webextensions API
+### Webextensions API
 
-* [browser.alarms](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/alarms)
-* [browser.cookies](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/cookies)
-* [browser.downloads](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/downloads)
-* [browser.events](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/events)
-* [browser.manifest](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/manifest)
-* [browser.extensionTypes](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/extensionTypes)
-* [browser.extension](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/extension)
-* [browser.i18n](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n)
-* [browser.idle](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/idle)
-* [browser.management](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/management)
-* [browser.notifications](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/notifications)
-* [browser.runtime](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime)
-* [browser.storage](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/storage)
-* [browser.test](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/test)
-* [browser.webNavigation](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webNavigation)
-* [browser.webRequest](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest)
-* [browser.bookmarks](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/bookmarks)
-* [browser.browserAction](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/browserAction)
-* [browser.commands](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/commands)
-* [browser.contextMenusInternal](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/contextMenusInternal)
-* [browser.contextMenus](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/contextMenus)
-* [browser.history](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/history)
-* [browser.pageAction](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/pageAction)
-* [browser.tabs](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs)
-* [browser.windows](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/windows)
+- [browser.alarms](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/alarms)
+- [browser.cookies](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/cookies)
+- [browser.downloads](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/downloads)
+- [browser.events](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/events)
+- [browser.manifest](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/manifest)
+- [browser.extensionTypes](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/extensionTypes)
+- [browser.extension](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/extension)
+- [browser.i18n](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n)
+- [browser.idle](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/idle)
+- [browser.management](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/management)
+- [browser.notifications](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/notifications)
+- [browser.runtime](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime)
+- [browser.storage](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/storage)
+- [browser.test](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/test)
+- [browser.webNavigation](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webNavigation)
+- [browser.webRequest](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest)
+- [browser.bookmarks](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/bookmarks)
+- [browser.browserAction](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/browserAction)
+- [browser.commands](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/commands)
+- [browser.contextMenusInternal](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/contextMenusInternal)
+- [browser.contextMenus](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/contextMenus)
+- [browser.history](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/history)
+- [browser.pageAction](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/pageAction)
+- [browser.tabs](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs)
+- [browser.windows](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/windows)
 
-# Any questions?
+## Any questions?
 
 Feel free to [open issue](https://github.com/acvetkov/sinon-chrome/issues).
 
-# Useful resources
+## Useful resources
+
 [Awesome Browser Extensions And Apps](https://github.com/vitalets/awesome-browser-extensions-and-apps) - a curated list of awesome resources for building browser extensions and apps.
